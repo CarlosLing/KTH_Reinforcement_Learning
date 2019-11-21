@@ -43,8 +43,6 @@ def apply_action(p_rob, p_pol, action, maze):
 
     # Check for rewards
     if new_pol == new_rob:
-        new_rob = start_pos
-        new_pol = start_pos_pol
         reward = reward_caught
     elif new_rob == bank_pos:
         reward = reward_bank
@@ -95,7 +93,7 @@ if __name__ == '__main__':
         Q_plot[i, :] = Q[0, 0, 3, 3, :]
 
     plt.figure()
-    plt.plot(Q_plot[0:100000, :])
+    plt.plot(Q_plot[0:1000000, :])
     plt.show()
 
     # SARSA
@@ -105,7 +103,7 @@ if __name__ == '__main__':
     n_sa = np.zeros((xdim, ydim, xdim, ydim, n_a))
 
     N_iter = 10000000
-    Q_plot = np.zeros((N_iter, n_a))
+    Q_plots = np.zeros((N_iter, n_a))
 
     eps = 0.1
 
@@ -126,18 +124,27 @@ if __name__ == '__main__':
         # Imput action to the system
         reward, new_rob, new_pol = apply_action(p_rob, p_pol, action, maze)
 
+        # For the next action
+        if np.random.binomial(1, (1-eps)):
+            # Choose the function with the best Q
+            Q_vector = Q[new_rob[0], new_rob[1], new_pol[0], new_pol[1], :]
+            i1_action = np.argmax(Q_vector)
+        else:
+            # Choose random action
+            i1_action = random.choice(range(n_a))
+
         # Update Q function
         n_sa[p_rob[0], p_rob[1], p_pol[0], p_pol[1], i_action] = n_sa[p_rob[0], p_rob[1], p_pol[0], p_pol[
             1], i_action] + 1
         stepsize = 1 / (n_sa[p_rob[0], p_rob[1], p_pol[0], p_pol[1], i_action] ** (2 / 3))
         Q_prev = Q[p_rob[0], p_rob[1], p_pol[0], p_pol[1], i_action]
-        Q_next_state_max = max(Q[new_rob[0], new_rob[1], new_pol[0], new_pol[1], :])
+        Q_state_max = Q[new_rob[0], new_rob[1], new_pol[0], new_pol[1], i1_action]
         Q[p_rob[0], p_rob[1], p_pol[0], p_pol[1], i_action] = Q_prev + stepsize * (
-                    reward + disc_factor * Q_next_state_max - Q_prev)
+                    reward + disc_factor * Q_state_max - Q_prev)
 
-        Q_plot[i, :] = Q[0, 0, 3, 3, :]
+        Q_plots[i, :] = Q[0, 0, 3, 3, :]
 
     plt.figure()
-    plt.plot(Q_plot[0:100000, :])
+    plt.plot(Q_plots[0:10000000, :])
     plt.show()
 
