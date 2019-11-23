@@ -24,7 +24,7 @@ if __name__ == '__main__':
         for y_per in range(ydim):
             for x_min in range(xdim):
                 for y_min in range(ydim):
-                    # Do not complete imposible settings i.e. person in the wall
+                    # Do not complete impossible settings i.e. person in the wall
                     if maze[x_per+1, y_per+1] and maze_mino[x_min+1,y_min+1]:
                         if ([x_per, y_per] == escape_pos) and ([x_min, y_min] != escape_pos):
                             values[x_per, y_per, x_min, y_min, Tmax-1] = 1
