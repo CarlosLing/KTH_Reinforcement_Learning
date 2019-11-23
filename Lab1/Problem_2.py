@@ -99,9 +99,6 @@ if __name__ == '__main__':
     valu_ini = []
     for disc_factor in df:
 
-
-
-
         dimensions = [xdim, ydim]
         maze = generate_maze(dimensions, [])
 

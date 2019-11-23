@@ -17,7 +17,7 @@ def fill_values(x_per, y_per, x_min, y_min, t, Tmax, maze, maze_mino, values, es
 
     if maze[x_per + 1, y_per + 1] and maze_mino[x_min + 1, y_min + 1]:
         # if Escapes value = 1
-        if ([x_per, y_per] == escape_pos) and ([x_min, y_min] != escape_pos):
+        if ((x_per, y_per) == escape_pos) and ((x_min, y_min) != escape_pos):
             max_value = 1
         elif [x_per, y_per] == [x_min, y_min]:
             max_value = 0
