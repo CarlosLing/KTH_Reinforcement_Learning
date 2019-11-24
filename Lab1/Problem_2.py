@@ -2,6 +2,7 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 from Lab1.maze import generate_maze
+from Lab1.drawer import draw_full_path
 
 
 xdim = 3
@@ -11,6 +12,7 @@ start_pos_pol = [1, 2]
 banks_pos = [[0, 0], [2, 0], [0, 5], [2, 5]]
 reward_bank = 10
 reward_caught = -50
+actions = [[0, 0], [0, 1], [0, -1], [1, 0], [-1, 0]]
 actions_pol = [[0, 1], [0, -1], [1, 0], [-1, 0]]
 
 
@@ -93,17 +95,66 @@ def apply_action(p_rob, p_pol, action, maze):
     return reward, new_rob, new_pol
 
 
+def draw_game(name, V, Tmax):
+    rob_path = [start_pos]
+    pol_path = [start_pos_pol]
+    for t in range(Tmax):
+        if rob_path[t] == pol_path[t]:
+            break
+
+        # Calculate optimal path.
+        value = -1000
+        opt_new_pos = []
+        for action in actions:
+            new_pos = [rob_path[t][0] + action[0], rob_path[t][1] + action[1]]
+            if maze[new_pos[0] + 1, new_pos[1] + 1]:
+
+                available_pol_pos = []
+                for pol_action in actions_pol:
+                    new_pol_pos = [pol_path[t][0] + pol_action[0], pol_path[t][1] + pol_action[1]]
+                    if check_compatibility(rob_path[t], pol_path[t], new_pol_pos):
+                        if maze[new_pol_pos[0] + 1, new_pol_pos[1] + 1]:
+                            available_pol_pos.append(new_pol_pos)
+
+                val = 0
+                for new_pol_pos in available_pol_pos:
+                    val = val + V[new_pos[0], new_pos[1], new_pol_pos[0], new_pol_pos[1]]
+                val = val/len(available_pol_pos)
+
+                #print("Action:" + str(action) + " New Pos: " + str(new_pos) + " Value: " + str(val))
+                if val > value:
+                    value = val
+                    opt_new_pos = new_pos
+
+        rob_path.append(opt_new_pos)
+
+        available_pol_pos = []
+        for pol_action in actions_pol:
+            new_pol_pos = [pol_path[t][0] + pol_action[0], pol_path[t][1] + pol_action[1]]
+            if check_compatibility(rob_path[t], pol_path[t], new_pol_pos):
+                if maze[new_pol_pos[0] + 1, new_pol_pos[1] + 1]:
+                    available_pol_pos.append(new_pol_pos)
+
+        pos = random.choice(available_pol_pos)
+        pol_path.append(pos)
+
+    images = draw_full_path(rob_path, pol_path, [], banks_pos)
+
+    for i, image in enumerate(images):
+        image.save("images/" + name + str(i) + ".png")
+
 if __name__ == '__main__':
 
-    df = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    df = np.arange(0, 10, 1)
+    df = np.delete(df, 0)
+    df = np.multiply(df, 0.1)
+    df = np.insert(df, 8, 0.85)
     valu_ini = []
     for disc_factor in df:
 
         dimensions = [xdim, ydim]
         maze = generate_maze(dimensions, [])
 
-        # Define robber actions
-        actions = [[0, 0], [0, 1], [0, -1], [1, 0], [-1, 0]]
         n_a = len(actions)
         # Initialize value function
         V = np.zeros((xdim, ydim, xdim, ydim))
@@ -135,7 +186,13 @@ if __name__ == '__main__':
         print(V[0,0,1,2])
         valu_ini.append(V[0,0,1,2])
 
+        draw_game("bank_heist" + str(disc_factor) + "-", V, 19)
+
     plt.figure()
     plt.plot(df, valu_ini)
+    plt.xlabel("Discount Factor")
+    plt.ylabel("Value")
     plt.show()
+
+
 

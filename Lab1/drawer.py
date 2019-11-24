@@ -2,8 +2,9 @@ from PIL import Image, ImageDraw, ImageColor
 
 UNIT = 100
 
-def draw_maze(walls):
-    step_count = [8, 7]
+def draw_maze(walls, banks=[]):
+    #step_count = [8, 7]
+    step_count = [6, 3]
     size = [UNIT*step_count[0], UNIT*step_count[1]]
     image = Image.new(mode='RGBA', size=size, color="white")
 
@@ -28,14 +29,20 @@ def draw_maze(walls):
         bounds = [UNIT*point[1], UNIT*point[0], UNIT*(1+point[1]), UNIT*(1+point[0])]
         draw.rectangle(bounds, fill="black")
 
+    bank_size = 10
+    for bank in banks:
+        bounds = [UNIT * (bank[1] + 0.5) - bank_size, UNIT * (bank[0] + 0.5) - bank_size,
+                  UNIT * (bank[1] + 0.5) + bank_size, UNIT * (bank[0] + 0.5) + bank_size]
+        draw.rectangle(bounds, fill="black")
+
     del draw
     return image
 
-def draw_path(person_path, min_path, walls):
+def draw_path(person_path, min_path, walls, banks=[]):
 
     person_col = "blue"
     min_col = "red"
-    image = draw_maze(walls)
+    image = draw_maze(walls, banks)
     draw = ImageDraw.Draw(image)
 
     radius = 7
@@ -75,10 +82,10 @@ def draw_path(person_path, min_path, walls):
     return image
 
 
-def draw_full_path(person_path, min_path, walls):
+def draw_full_path(person_path, min_path, walls, banks=[]):
     images = []
     for i in range(1, len(person_path)+1):
-        image = draw_path(person_path[0:i], min_path[0:i], walls)
+        image = draw_path(person_path[0:i], min_path[0:i], walls, banks)
         images.append(image)
 
     return images
