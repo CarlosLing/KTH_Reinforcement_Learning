@@ -145,11 +145,9 @@ def draw_game(name, V, Tmax):
 
 if __name__ == '__main__':
 
-    df = np.arange(0, 10, 1)
-    df = np.delete(df, 0)
-    df = np.multiply(df, 0.1)
-    df = np.insert(df, 8, 0.85)
+    df = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9]
     valu_ini = []
+    df = [0.85]
     for disc_factor in df:
 
         dimensions = [xdim, ydim]
@@ -186,10 +184,7 @@ if __name__ == '__main__':
         print(V[0,0,1,2])
         valu_ini.append(V[0,0,1,2])
 
-        if disc_factor == 0.85:
-            draw_game("bank_heist85-", V, 19)
-        else:
-            draw_game("bank_heist" + str(int(10*disc_factor)) + "-", V, 19)
+        draw_game("bank_heist" + str(int(100*disc_factor)) + "-", V, 19)
 
     plt.figure()
     plt.plot(df, valu_ini)
