@@ -11,7 +11,7 @@ start_pos = [0,0]
 start_pos_pol = [1, 2]
 banks_pos = [[0, 0], [2, 0], [0, 5], [2, 5]]
 reward_bank = 10
-reward_caught = -50
+reward_caught = -10.5
 actions = [[0, 0], [0, 1], [0, -1], [1, 0], [-1, 0]]
 actions_pol = [[0, 1], [0, -1], [1, 0], [-1, 0]]
 
@@ -184,7 +184,7 @@ if __name__ == '__main__':
         print(V[0,0,1,2])
         valu_ini.append(V[0,0,1,2])
 
-        draw_game("bank_heist" + str(int(100*disc_factor)) + "-", V, 19)
+        draw_game("105bank_heist" + str(int(100*disc_factor)) + "-", V, 19)
 
     plt.figure()
     plt.plot(df, valu_ini)
