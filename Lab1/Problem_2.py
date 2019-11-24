@@ -186,7 +186,10 @@ if __name__ == '__main__':
         print(V[0,0,1,2])
         valu_ini.append(V[0,0,1,2])
 
-        draw_game("bank_heist" + str(disc_factor) + "-", V, 19)
+        if disc_factor == 0.85:
+            draw_game("bank_heist85-", V, 19)
+        else:
+            draw_game("bank_heist" + str(int(10*disc_factor)) + "-", V, 19)
 
     plt.figure()
     plt.plot(df, valu_ini)
