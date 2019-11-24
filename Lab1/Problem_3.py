@@ -42,9 +42,9 @@ def apply_action(p_rob, p_pol, action, maze):
     new_pol = [p_pol[0] + action_pol[0], p_pol[1] + action_pol[1]]
 
     # Check for rewards
-    if new_pol == new_rob:
+    if p_pol == p_rob:
         reward = reward_caught
-    elif new_rob == bank_pos:
+    elif p_rob == bank_pos:
         reward = reward_bank
     else:
         reward = 0
@@ -93,7 +93,7 @@ if __name__ == '__main__':
         Q_plot[i, :] = Q[0, 0, 3, 3, :]
 
     plt.figure()
-    plt.plot(Q_plot[0:1000000, :])
+    plt.plot(Q_plot[0:10000000, :])
     plt.show()
 
     # SARSA
