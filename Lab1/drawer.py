@@ -4,7 +4,9 @@ UNIT = 100
 
 def draw_maze(walls, banks=[]):
     #step_count = [8, 7]
-    step_count = [6, 3]
+    #step_count = [6, 3]
+    step_count = [4, 4]
+
     size = [UNIT*step_count[0], UNIT*step_count[1]]
     image = Image.new(mode='RGBA', size=size, color="white")
 

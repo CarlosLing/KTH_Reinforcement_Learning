@@ -97,3 +97,16 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
     save_game("still", a, Tmax)
+
+    # Version 3: Life Expectancy = 30
+    lamb = 1/30
+    actions_mino = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+    v, a = solve(Tmax, actions_mino)
+    initial = v[0, 0, 6, 5, :]
+    plt.figure()
+    plt.plot(initial, label="Probability of escape")
+    plt.xlabel("T")
+    plt.legend()
+    plt.show()
+    save_game("still", a, Tmax)
+
