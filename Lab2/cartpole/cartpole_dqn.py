@@ -75,7 +75,10 @@ class DQNAgent:
         #Insert your e-greedy policy code here
         #Tip 1: Use the random package to generate a random action.
         #Tip 2: Use keras.model.predict() to compute Q-values from the state.
-        action = random.randrange(self.action_size)
+        if np.random.binomial(1, self.epsilon):
+            action = random.randrange(self.action_size)
+        else:
+            action = np.argmax(self.model.predict(state))
         return action
 ###############################################################################
 ###############################################################################
@@ -105,15 +108,18 @@ class DQNAgent:
         target_val = self.target_model.predict(update_target) #Generate the target values for training the outer loop target network
 
         #Q Learning: get maximum Q value at s' from target network
-###############################################################################
-###############################################################################
+        ###############################################################################
+        ###############################################################################
         #Insert your Q-learning code here
         #Tip 1: Observe that the Q-values are stored in the variable target
         #Tip 2: What is the Q-value of the action taken at the last state of the episode?
         for i in range(self.batch_size): #For every batch
-            target[i][action[i]] = random.randint(0,1)
-###############################################################################
-###############################################################################
+            if done[i]:
+                target[i][action[i]] = reward[i]
+            else:
+                target[i][action[i]] = reward[i] + self.discount_factor * max(target_val[i])
+        ###############################################################################
+        ###############################################################################
 
         #Train the inner loop network
         self.model.fit(update_input, target, batch_size=self.batch_size,
@@ -145,6 +151,8 @@ if __name__ == "__main__":
 
     #Create agent, see the DQNAgent __init__ method for details
     agent = DQNAgent(state_size, action_size)
+    # Configure the agent
+    agent.render = True
 
     #Collect test states for plotting Q values using uniform random policy
     test_states = np.zeros((agent.test_state_no, state_size))
@@ -153,6 +161,7 @@ if __name__ == "__main__":
 
     done = True
     for i in range(agent.test_state_no):
+
         if done:
             done = False
             state = env.reset()
